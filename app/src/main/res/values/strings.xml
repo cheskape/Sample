@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Sample</string>
+
+    <string name="button_local">Use Device</string>
+    <string name="button_cloud">Use Cloud</string>
+
+    <string name="action_gallery">Open Gallery</string>
+
+    <string name="not_found">No barcode found D:</string>
+    <string name="found">Barcode found! :D</string>
+
+    <string name="gallery_permission_request">This app needs to access files on your device.</string>
+</resources>
