@@ -2,6 +2,10 @@ package com.example.sample;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -67,15 +71,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                                 FirebaseVisionBarcode.FORMAT_AZTEC)
                                         .build();
 
-                        FirebaseVisionImage image = null;
-                        try {
-                            image = FirebaseVisionImage.fromFilePath( this, dataUri);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        bitmap = toGrayscale(bitmap);
+                        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);//                        try {
+//                            image = FirebaseVisionImage.fromFilePath( this, dataUri);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
                         FirebaseVisionBarcodeDetector detector = FirebaseVision.getInstance()
                                 .getVisionBarcodeDetector( options);
-
+                        mMainImage.setImageBitmap( bitmap);
                         mResultText.setText(R.string.app_name);
                         Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image)
                                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
@@ -84,6 +88,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                         if( firebaseVisionBarcodes.size() > 0){
                                             mResultText.setText(R.string.found);
                                             for( FirebaseVisionBarcode barcode: firebaseVisionBarcodes){
+
                                                 Point[] corners = barcode.getCornerPoints();
 
                                                 int x1 = corners[0].x < corners[3].x ? corners[0].x : corners[3].x;
@@ -113,5 +118,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+    }
+
+    public static Bitmap toGrayscale( Bitmap srcImage){
+
+        Bitmap bmpGrayscale = Bitmap.createBitmap( srcImage.getWidth(), srcImage.getHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(bmpGrayscale);
+        Paint paint = new Paint();
+
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        paint.setColorFilter(new ColorMatrixColorFilter(cm));
+        canvas.drawBitmap(srcImage, 0, 0, paint);
+
+        return bmpGrayscale;
     }
 }
