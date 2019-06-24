@@ -56,7 +56,7 @@ public class QRCodeUtility{
 
     public final static String REQUEST_FILES_ACCESS = "This app needs to access files in your device.";
 
-    public final static String NO_QRCODE = "No QR code found";
+    public final static String NO_QRCODE = "Cannot detect a QR Code. Try providing a clearer image.";
 
     private final static String PHOTO_FOLDER = "/Pictures/";
     private final static String SAVED_TO_NOTICE = "Image saved to: ";
@@ -72,9 +72,7 @@ public class QRCodeUtility{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                Intent intent = new Intent( Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.setData( Uri.parse( "package" + activity.getPackageName()));
-                activity.startActivityForResult( intent, requestCode);
+                ActivityCompat.requestPermissions( activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
             }
         });
 
@@ -108,7 +106,8 @@ public class QRCodeUtility{
         activity.startActivityForResult( intent, PICK_IMAGE);
     }
 
-    public static void startBarScannerAnimation(Activity activity, final ImageView mProxyImage, final Bitmap bitmap){
+    public static void startBarScannerAnimation(Activity activity, final Context context, final ImageView mProxyImage, final Bitmap bitmap){
+        Toast.makeText(context,"REACHED HERE",Toast.LENGTH_SHORT).show();
 
         //Scanner
         final int screenWidth,screenHeight;
@@ -127,20 +126,28 @@ public class QRCodeUtility{
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Toast.makeText()
                 mProxyImage.setVisibility(View.VISIBLE);
                 handler.post(new Runnable() {
+                    int flag = 0;
                     @Override
                     public void run() {
-                        barScanY += 30;
-                        if(mProxyImage.getY()> finalHeight){
-                            barScanY = -100.0f;
-                        }
+                        if(flag == 0){
+                            barScanY += 20;
+                            if(mProxyImage.getY()> finalHeight){
+                                barScanY = finalHeight;
+                                flag = 1;
+                            }}
+                        else{
+                            barScanY -= 20;
+                            if(mProxyImage.getY()<-100.0f){
+                                flag = 0;
+                            }}
+
                         mProxyImage.setY(barScanY);
                     }
                 });
             }
-        },0,20);
+        },0,5);
 
     }
 
@@ -202,7 +209,7 @@ public class QRCodeUtility{
     public static Bitmap getQRCodeImageFromBitmap( @NonNull FirebaseVisionBarcode barcode, @NonNull Bitmap bitmap){
         Point[] corner = barcode.getCornerPoints();
 
-        int x1 = corner[0].x < corner[3].x ? corner[0].x : corner[3].x;
+        int x1 = corner[0].x < corner[3].x? corner[0].x : corner[3].x;
         int y1 = corner[0].y < corner[1].y? corner[0].y : corner[1].y;
         int x2 = corner[1].x > corner[2].x? corner[1].x : corner[2].x;
         int y2 = corner[2].y > corner[3].y? corner[2].y : corner[3].y;
