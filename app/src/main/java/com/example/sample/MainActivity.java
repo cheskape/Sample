@@ -124,23 +124,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         Bitmap bmpGrayscale = Bitmap.createBitmap( srcImage.getWidth(), srcImage.getHeight(), Bitmap.Config.ARGB_8888);
 
-        int A,R,G,B,colorPixel;
-        int width = srcImage.getWidth();
-        int height = srcImage.getHeight();
+        Canvas canvas = new Canvas(bmpGrayscale);
+        Paint paint = new Paint();
 
-        for (int x=0;x<width; x++){
-            for (int y=0;y<height; y++){
-                colorPixel = srcImage.getPixel(x,y);
-                A = Color.alpha(colorPixel);
-                R = Color.red(colorPixel);
-                G = Color.green(colorPixel);
-                B = Color.blue(colorPixel);
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        paint.setColorFilter(new ColorMatrixColorFilter(cm));
+        canvas.drawBitmap(srcImage, 0, 0, paint);
 
-                R = (R+G+B) / 3;
-
-                bmpGrayscale.setPixel(x,y,Color.argb(A,R,G,B));
-            }
-        }
         return bmpGrayscale;
     }
 }
