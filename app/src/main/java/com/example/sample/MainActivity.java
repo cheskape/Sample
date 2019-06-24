@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Bitmap bitmap;
     private ImageView mMainImage;
     private TextView mResultText;
+    private Button mSaveImageButton;
 
     public static final String ACTION_BAR_TITLE = "action_bar_title";
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mMainImage = findViewById( R.id.main_image);
         mResultText = findViewById( R.id.main_text_results);
+        mSaveImageButton = findViewById( R.id.main_save_image_button);
     }
 
     @Override
@@ -88,9 +91,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
                         mMainImage.setImageBitmap( bitmap);
                         mResultText.setText(QRCodeUtility.getQrCodeValue(barcode));
+                        mSaveImageButton.setVisibility( View.VISIBLE);
                     }else{
                         mMainImage.setImageBitmap( bitmap);
-                        mResultText.setText( R.string.not_found);
+                        mResultText.setText( QRCodeUtility.NO_QRCODE);
+                        mSaveImageButton.setVisibility( View.INVISIBLE);
                     }
                     break;
             }

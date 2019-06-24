@@ -32,12 +32,14 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
             <Button
+                android:id="@+id/main_save_image_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="saveImage"
                 android:text="@string/save_qrcode_button"
                 android:layout_below="@id/main_text_results"
-                android:layout_centerHorizontal="true"/>
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible"/>
 
         </RelativeLayout>
 
