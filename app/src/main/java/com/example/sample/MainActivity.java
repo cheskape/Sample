@@ -139,7 +139,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 R = (R+G+B) / 3;
 
                 bmpGrayscale.setPixel(x,y,Color.argb(A,R,G,B));
-                srcImage = bmpGrayscale;
             }
         }
         return bmpGrayscale;
