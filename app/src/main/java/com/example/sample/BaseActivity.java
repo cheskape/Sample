@@ -84,8 +84,6 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void selectPicture(){
-        imageFile = MyHelper.createTempFile( imageFile);
-
         Intent intent = new Intent( Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult( intent, RC_SELECT_PICTURE);
     }

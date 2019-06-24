@@ -44,13 +44,13 @@ public class MyHelper {
         return path;
     }
 
-    public static File createTempFile( File file){
-        File dir = new File( Environment.getExternalStorageDirectory().getPath() + "/com.example.sample");
-        if( !dir.exists() || !dir.isDirectory()){
+    public static File createTempFile(File file) {
+        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/com.example.mlkit");
+        if (!dir.exists() || !dir.isDirectory()) {
             dir.mkdirs();
         }
-        if( file == null){
-            file = new File( dir, "original.jpg");
+        if (file == null) {
+            file = new File(dir, "original.jpg");
         }
         return file;
     }
