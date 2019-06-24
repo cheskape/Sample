@@ -2,6 +2,7 @@ package com.example.sample;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -58,7 +59,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         bitmap = MyHelper.resizeImage( imageFile, path, mMainImage);
                     }
                     if( bitmap != null){
-                        mMainImage.setImageBitmap( bitmap);
 
                         FirebaseVisionBarcodeDetectorOptions options =
                                 new FirebaseVisionBarcodeDetectorOptions.Builder()
