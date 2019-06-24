@@ -97,43 +97,4 @@ public class MyHelper {
         alert.show();
     }
 
-    public static Bitmap resizeImage(File imageFile, Context context, Uri uri, ImageView view) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        try {
-            decodeStream(context.getContentResolver().openInputStream(uri), null, options);
-            int photoW = options.outWidth;
-            int photoH = options.outHeight;
-
-            options.inSampleSize = Math.min(photoW / view.getWidth(), photoH / view.getHeight());
-            return compressImage(imageFile, BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static Bitmap resizeImage(File imageFile, String path, ImageView view) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        decodeFile(path, options);
-
-        int photoW = options.outWidth;
-        int photoH = options.outHeight;
-
-        options.inJustDecodeBounds = false;
-
-        return compressImage(imageFile, BitmapFactory.decodeFile(path, options));
-    }
-
-    private static Bitmap compressImage(File imageFile, Bitmap bmp) {
-        try {
-            FileOutputStream fos = new FileOutputStream(imageFile);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 80, fos);
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bmp;
-    }
-
 }

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -63,6 +64,7 @@ public class BaseActivity extends AppCompatActivity {
                 if( grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     selectPicture();
                 }else{
+                    Log.d( BaseActivity.class.getSimpleName(), "HELP : " + requestCode);
                     MyHelper.needPermission( this, requestCode, R.string.gallery_permission_request);
                 }
                 break;

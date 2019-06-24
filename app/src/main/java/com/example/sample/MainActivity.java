@@ -1,55 +1,76 @@
 package com.example.sample;
 
-
-import com.example.sample.QRCodeUtility;
-
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.net.Uri;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.ml.vision.FirebaseVision;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
-import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
-import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
-import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
+import java.io.File;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Bitmap bitmap;
     private ImageView mMainImage;
     private TextView mResultText;
 
+    public static final String ACTION_BAR_TITLE = "action_bar_title";
+
+    public File imageFile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+
+        if( actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle( getIntent().getStringExtra( ACTION_BAR_TITLE));
+        }
+
         setContentView(R.layout.activity_main);
         mMainImage = findViewById( R.id.main_image);
         mResultText = findViewById( R.id.main_text_results);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate( R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch( item.getItemId()){
+            case R.id.action_gallery:
+                QRCodeUtility.checkStoragePermission( this, this, QRCodeUtility.STORAGE_PERMISSION);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode){
+            case QRCodeUtility.STORAGE_PERMISSION:
+                if( grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    QRCodeUtility.startPickImageActivity( this);
+                }else{
+                    QRCodeUtility.warnNeedPermission( this, requestCode, QRCodeUtility.REQUEST_FILES_ACCESS);
+                }
+        }
     }
 
     @Override
@@ -57,14 +78,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if( resultCode == RESULT_OK){
             switch ( requestCode){
-                case RC_STORAGE_PERMS1:
-                    checkStoragePermission( requestCode);
+                case QRCodeUtility.STORAGE_PERMISSION:
+                    QRCodeUtility.checkStoragePermission( MainActivity.this, this, QRCodeUtility.STORAGE_PERMISSION);
                     break;
-                case RC_SELECT_PICTURE:
-                    bitmap = QRCodeUtility.getBitmapFromGalleryResult( this, data);
+                case QRCodeUtility.PICK_IMAGE:
+                    bitmap = QRCodeUtility.getBitmapFromGalleryActivityResult( this, data);
                     FirebaseVisionBarcode barcode = QRCodeUtility.getQRCodeBarcodeFromBitmap( bitmap);
                     if( barcode != null) {
-                        mMainImage.setImageBitmap(QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap));
+                        bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
+                        mMainImage.setImageBitmap( bitmap);
                         mResultText.setText(QRCodeUtility.getQrCodeValue(barcode));
                     }else{
                         mMainImage.setImageBitmap( bitmap);
@@ -79,18 +101,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
     }
 
-    public static Bitmap toGrayscale( Bitmap srcImage){
-
-        Bitmap bmpGrayscale = Bitmap.createBitmap( srcImage.getWidth(), srcImage.getHeight(), Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(bmpGrayscale);
-        Paint paint = new Paint();
-        ColorMatrix cm = new ColorMatrix();
-        cm.setSaturation(0);
-        paint.setColorFilter(new ColorMatrixColorFilter(cm));
-        canvas.drawBitmap(srcImage, 0, 0, paint);
-
-
-        return bmpGrayscale;
+    public void saveImage( View v){
+        QRCodeUtility.saveBitmapToGallery( MainActivity.this, this, "hellomoney", bitmap);
     }
+
 }

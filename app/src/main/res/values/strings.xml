@@ -9,5 +9,7 @@
     <string name="not_found">No barcode found D:</string>
     <string name="found">Barcode found! :D</string>
 
+
+    <string name="save_qrcode_button">Save QR Code</string>
     <string name="gallery_permission_request">This app needs to access files on your device.</string>
 </resources>
