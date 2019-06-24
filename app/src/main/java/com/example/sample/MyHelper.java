@@ -121,7 +121,7 @@ public class MyHelper {
         int photoH = options.outHeight;
 
         options.inJustDecodeBounds = false;
-        options.inSampleSize = Math.min(photoW / view.getWidth(), photoH / view.getHeight());
+
         return compressImage(imageFile, BitmapFactory.decodeFile(path, options));
     }
 
