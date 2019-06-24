@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -95,8 +96,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                                 int y1 = corners[0].y < corners[1].y? corners[0].y : corners[1].y;
                                                 int x2 = corners[1].x > corners[2].x? corners[1].x : corners[2].x;
                                                 int y2 = corners[2].y > corners[3].y? corners[2].y : corners[3].y;
-
                                                 mMainImage.setImageBitmap(Bitmap.createBitmap( bitmap, x1, y1, x2-x1 + 2, y2-y1 + 2));
+
+                                                String rawValue = barcode.getRawValue();
+                                                mResultText.setText( rawValue);
                                             }
                                         }else{
                                             mResultText.setText(R.string.not_found);
@@ -126,38 +129,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         Canvas canvas = new Canvas(bmpGrayscale);
         Paint paint = new Paint();
-
-        int A,R,G,B,pixel;
-        double contrast = Math.pow((100 + 20) / 100, 2);
-
-        int width = srcImage.getWidth();
-        int height = srcImage.getHeight();
-
-
-        for(int x = 0; x < width; ++x) {
-            for(int y = 0; y < height; ++y) {
-                pixel = srcImage.getPixel(x,y);
-                A = Color.alpha(pixel);
-
-                R = Color.red(pixel);
-                R = (int)(((((R / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                if(R < 0) { R = 0; }
-                else if(R > 255) { R = 255; }
-
-                G = Color.green(pixel);
-                G = (int)(((((G / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                if(G < 0) { G = 0; }
-                else if(G > 255) { G = 255; }
-
-                B = Color.blue(pixel);
-                B = (int)(((((B / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                if(B < 0) { B = 0; }
-                else if(B > 255) { B = 255; }
-
-                bmpGrayscale.setPixel(x, y, Color.argb(A, R, G, B));
-            }
-        }
-
         ColorMatrix cm = new ColorMatrix();
         cm.setSaturation(0);
         paint.setColorFilter(new ColorMatrixColorFilter(cm));
