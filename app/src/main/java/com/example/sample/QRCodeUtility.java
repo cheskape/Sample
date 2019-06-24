@@ -55,7 +55,7 @@ public class QRCodeUtility{
     private final static String SAVED_TO_NOTICE = "Image saved to: ";
     private final static String FILENAME_PREFIX = "hellomoney_qr_code_";
 
-    public static void warnNeedPermission( final Activity activity, final int requestCode, int message){
+    public static void warnNeedPermission( final Activity activity, final int requestCode, String message){
         AlertDialog.Builder alert = new AlertDialog.Builder( activity);
         alert.setMessage( message);
         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
