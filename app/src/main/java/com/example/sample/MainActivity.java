@@ -21,7 +21,7 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Bitmap bitmap;
-    private ImageView mMainImage;
+    private ImageView mMainImage,mProxyImage;
     private TextView mResultText;
     private Button mSaveImageButton;
 
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mMainImage = findViewById( R.id.main_image);
         mResultText = findViewById( R.id.main_text_results);
+        mProxyImage = findViewById(R.id.bar_scan);
         mSaveImageButton = findViewById( R.id.main_save_image_button);
     }
 
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     QRCodeUtility.startPickImageActivity( this);
                 }else{
                     QRCodeUtility.warnNeedPermission( this, requestCode, QRCodeUtility.REQUEST_FILES_ACCESS);
+
                 }
         }
     }
@@ -96,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         mMainImage.setImageBitmap( bitmap);
                         mResultText.setText( QRCodeUtility.NO_QRCODE);
                         mSaveImageButton.setVisibility( View.INVISIBLE);
+                        QRCodeUtility.startBarScannerAnimation(this,this,mProxyImage,bitmap);
                     }
                     break;
             }
