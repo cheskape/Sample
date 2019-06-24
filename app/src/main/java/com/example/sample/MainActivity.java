@@ -20,7 +20,7 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Bitmap bitmap;
-    private ImageView mMainImage;
+    private ImageView mMainImage,mProxyImage;
     private TextView mResultText;
 
     public static final String ACTION_BAR_TITLE = "action_bar_title";
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mMainImage = findViewById( R.id.main_image);
         mResultText = findViewById( R.id.main_text_results);
+        mProxyImage = findViewById(R.id.bar_scan);
     }
 
     @Override
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     QRCodeUtility.startPickImageActivity( this);
                 }else{
                     QRCodeUtility.warnNeedPermission( this, requestCode, QRCodeUtility.REQUEST_FILES_ACCESS);
+                    QRCodeUtility.startBarScannerAnimation(this,mProxyImage,bitmap);
                 }
         }
     }
