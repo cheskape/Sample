@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,17 +18,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 
+import java.util.Timer;
+
+import pl.droidsonroids.gif.GifImageView;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Bitmap bitmap;
     private ImageView mMainImage,horizontalBar;
     private TextView mResultText,transparentBG;
     private Button mSaveImageButton;
-
-
-
+    private GifImageView mOnSuccess;
 
     public static final String ACTION_BAR_TITLE = "action_bar_title";
+
+    private Handler handler = new Handler();
+    private Timer timer = new Timer();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,17 +100,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if( barcode != null) {
                         bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
                         mMainImage.setImageBitmap( bitmap);
-
                         mResultText.setText(QRCodeUtility.getQrCodeValue(barcode));
-                        mResultText.setVisibility(View.VISIBLE);
-                        mSaveImageButton.setVisibility( View.VISIBLE);
-                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,mMainImage);
+                        mResultText.setVisibility(View.INVISIBLE);
+                        mSaveImageButton.setVisibility( View.INVISIBLE);
+                        mOnSuccess = (GifImageView) findViewById(R.id.success_flag);
+                        mOnSuccess.setVisibility(View.INVISIBLE);
+                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,mMainImage,handler,timer,
+                                mOnSuccess);
+                        QRCodeUtility.bufferTextviewAndButton(mResultText,mSaveImageButton,1);
                     }else{
                         mMainImage.setImageBitmap( bitmap);
                         mResultText.setText( QRCodeUtility.NO_QRCODE);
-                        mResultText.setVisibility(View.VISIBLE);
+                        mResultText.setVisibility(View.INVISIBLE);
                         mSaveImageButton.setVisibility( View.INVISIBLE);
-                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,mMainImage);
+                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,mMainImage,handler,timer,
+                                mOnSuccess);
+                        QRCodeUtility.bufferTextviewAndButton(mResultText,mSaveImageButton,0);
                     }
                     break;
             }
@@ -119,28 +130,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         QRCodeUtility.saveBitmapToGallery( MainActivity.this, this, "hellomoney", bitmap);
     }
 
-//
-//    public Drawable createLine( int width, int height){
-//        Drawable line = new Drawable() {
-//            @Override
-//            public void draw(@NonNull Canvas canvas) {
-//
-//            }
-//
-//            @Override
-//            public void setAlpha(int alpha) {
-//
-//            }
-//
-//            @Override
-//            public void setColorFilter(@Nullable ColorFilter colorFilter) {
-//
-//            }
-//
-//            @Override
-//            public int getOpacity() {
-//                return 0;
-//            }
-//        }
-//    }
 }

@@ -51,6 +51,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
+
+import pl.droidsonroids.gif.GifImageView;
 
 public class QRCodeUtility{
 
@@ -67,8 +70,9 @@ public class QRCodeUtility{
 
     private static float barScanY;
     private static int flag = 0;
-
     private static int height;
+
+
 
     private static ViewTreeObserver vto;
 
@@ -219,7 +223,8 @@ public class QRCodeUtility{
     }
 
     public static void startBarScannerAnimation(final ImageView horizontalBar, final TextView transparentBG,
-                                                final ImageView imageToScan){
+                                                final ImageView imageToScan, final Handler handler,
+                                                final Timer timer, final GifImageView onSuccessShow){
 
         vto = imageToScan.getViewTreeObserver();
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -235,10 +240,8 @@ public class QRCodeUtility{
         transparentBG.setVisibility(View.VISIBLE);
 
         //Handler Class
-        final Handler handler = new Handler();
-        final Timer timer = new Timer();
 
-        timer.schedule(new TimerTask() {
+        timer.scheduleAtFixedRate(new TimerTask() {
 
             @Override
             public void run() {
@@ -255,10 +258,11 @@ public class QRCodeUtility{
                             barScanY -= 5;
                             if(horizontalBar.getY()<-100.0f){
                                 flag = 0;
-                                timer.cancel();
-                                timer.purge();
                                 horizontalBar.setVisibility(View.GONE);
                                 transparentBG.setVisibility(View.GONE);
+                                onSuccessShow.setVisibility(View.VISIBLE);
+                                timer.cancel();
+                                timer.purge();
                             }}
 
                         horizontalBar.setY(barScanY);
@@ -267,5 +271,14 @@ public class QRCodeUtility{
                 });
             }
         },500,10);
+
     }
+
+    public static void bufferTextviewAndButton(final TextView resultText, final Button saveImage, int flag){
+        resultText.setVisibility(View.VISIBLE);
+        if(flag == 1){
+            saveImage.setVisibility(View.VISIBLE); }
+        else{saveImage.setVisibility(View.INVISIBLE);}
+    }
+
 }
