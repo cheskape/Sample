@@ -43,6 +43,17 @@
                     android:visibility="invisible"
                     android:src="@drawable/success_scan_gif"/>
 
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/gif_view_on_failure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/transparentBG"
+                    android:visibility="invisible"
+                    android:src="@drawable/failure_scan_gif"/>
+
 
                 <ImageView
                     android:id="@+id/bar_scan"
@@ -60,6 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="Hi"
+                    android:gravity="center"
                     android:layout_margin="15dp"
                     android:layout_below="@+id/main_image"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"

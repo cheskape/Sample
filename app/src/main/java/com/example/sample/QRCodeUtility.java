@@ -21,11 +21,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
-
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,14 +62,10 @@ public class QRCodeUtility{
     private final static String SAVED_TO_NOTICE = "Image saved to: ";
     private final static String FILENAME_PREFIX = "hellomoney_qr_code_";
 
-
-    // HORIZONTAL BAR ANIMATION
     private static float barScanY;
     private static int flag = 0;
 
-    // GET HEIGHT OF SCREEN
     private  static int height = 0;
-
 
     public static void warnNeedPermission( final Activity activity, final int requestCode, String message){
         AlertDialog.Builder alert = new AlertDialog.Builder( activity);
@@ -241,12 +238,12 @@ public class QRCodeUtility{
                     @Override
                     public void run() {
                         if(flag == 0){
-                            barScanY += 5;
+                            barScanY += 10;
                             if(horizontalBar.getY()> height){
                                 flag = 1;
                             }}
                         else{
-                            barScanY -= 5;
+                            barScanY -= 10;
                             if(horizontalBar.getY() < -100.0f){
                                 flag = 0;
                                 timer.cancel();
@@ -265,7 +262,7 @@ public class QRCodeUtility{
         timer.schedule( task ,500,10);
     }
 
-    public static int getSecondsImageHeight(final ImageView imageToScan, final Display display){
+    public static int getSecondsFromImageHeight(final ImageView imageToScan, final Display display){
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
@@ -273,14 +270,24 @@ public class QRCodeUtility{
         return height;
     }
 
-    public static void viewsAfterScan(Bitmap bitmap, String barcodeValue, ImageView qrCodeImage, ImageView initImage,
-                                      TextView resultText, Button saveImageButton){
+    public static void viewsAfterSuccessfulScan(Bitmap bitmap, String barcodeValue, ImageView qrCodeImage,
+                                                ImageView initImage, TextView resultText, Button saveImageButton){
         qrCodeImage.setImageBitmap( bitmap);
         initImage.setVisibility(View.INVISIBLE);
         qrCodeImage.setVisibility(View.VISIBLE);
         resultText.setText( barcodeValue);
         resultText.setVisibility(View.VISIBLE);
         saveImageButton.setVisibility( View.VISIBLE);
+    }
+
+    public static void viewsAfterNoBarcodeScan( Bitmap bitmap, String message, ImageView qrCodeImage,
+                                                ImageView initImage, TextView resultText, Button saveImageButton){
+        qrCodeImage.setImageBitmap( bitmap);
+        initImage.setVisibility(View.INVISIBLE);
+        qrCodeImage.setVisibility(View.VISIBLE);
+        resultText.setText( QRCodeUtility.NO_QRCODE);
+        resultText.setVisibility(View.VISIBLE);
+        saveImageButton.setVisibility( View.INVISIBLE);
     }
 
 }
