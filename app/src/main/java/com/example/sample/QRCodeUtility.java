@@ -62,7 +62,7 @@ public class QRCodeUtility{
     private final static String SAVED_TO_NOTICE = "Image saved to: ";
     private final static String FILENAME_PREFIX = "hellomoney_qr_code_";
 
-    private static float barScanX,barScanY;
+    private static int barScanY = 0;
 
 
     public static void warnNeedPermission( final Activity activity, final int requestCode, String message){
@@ -106,50 +106,7 @@ public class QRCodeUtility{
         activity.startActivityForResult( intent, PICK_IMAGE);
     }
 
-    public static void startBarScannerAnimation(Activity activity, final Context context, final ImageView mProxyImage, final Bitmap bitmap){
-        Toast.makeText(context,"REACHED HERE",Toast.LENGTH_SHORT).show();
 
-        //Scanner
-        final int screenWidth,screenHeight;
-
-        //Bitmap image border
-        final int finalHeight = bitmap.getHeight();
-
-        //Handler Class
-        final Handler handler = new Handler();
-        Timer timer = new Timer();
-
-        WindowManager wm = activity.getWindowManager();
-        Display disp = wm.getDefaultDisplay();
-        Point size = new Point();
-        disp.getSize(size);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                mProxyImage.setVisibility(View.VISIBLE);
-                handler.post(new Runnable() {
-                    int flag = 0;
-                    @Override
-                    public void run() {
-                        if(flag == 0){
-                            barScanY += 20;
-                            if(mProxyImage.getY()> finalHeight){
-                                barScanY = finalHeight;
-                                flag = 1;
-                            }}
-                        else{
-                            barScanY -= 20;
-                            if(mProxyImage.getY()<-100.0f){
-                                flag = 0;
-                            }}
-
-                        mProxyImage.setY(barScanY);
-                    }
-                });
-            }
-        },0,5);
-
-    }
 
     public static Bitmap getBitmapFromGalleryActivityResult( Context context, Intent data){
         Bitmap imageBitmap = null;
@@ -254,4 +211,6 @@ public class QRCodeUtility{
 
         return grayscaleBitmap;
     }
+
+
 }
