@@ -112,7 +112,6 @@ public class QRCodeUtility{
     public static Bitmap getBitmapFromGalleryActivityResult( Context context, Intent data){
         Bitmap imageBitmap = null;
         Uri dataUri = data.getData();
-        Log.d( QRCodeUtility.class.getSimpleName(), "HELP : " + getPath( context, dataUri));
 
         try{
             imageBitmap = MediaStore.Images.Media.getBitmap( context.getContentResolver(), dataUri);
@@ -123,20 +122,6 @@ public class QRCodeUtility{
         return imageBitmap;
     }
 
-    public static String getPath(Context context, Uri uri) {
-        String path = "";
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-        int column_index;
-        if (cursor != null) {
-            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            path = cursor.getString(column_index);
-            cursor.close();
-        }
-        return path;
-    }
-
     public static FirebaseVisionBarcode getQRCodeBarcodeFromBitmap( @NonNull Bitmap bitmap){
         FirebaseVisionBarcodeDetectorOptions options =
                 new FirebaseVisionBarcodeDetectorOptions.Builder()
@@ -145,7 +130,7 @@ public class QRCodeUtility{
                             FirebaseVisionBarcode.FORMAT_AZTEC)
                     .build();
 
-        bitmap = toGrayscale( bitmap);
+//        bitmap = toGrayscale( bitmap);
 
         FirebaseVisionImage image = FirebaseVisionImage.fromBitmap( bitmap);
 
