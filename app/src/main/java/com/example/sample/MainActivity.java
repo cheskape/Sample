@@ -3,19 +3,16 @@ package com.example.sample;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,10 +20,13 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private Bitmap bitmap,temp_bitmap;
+    private Bitmap bitmap;
     private ImageView mMainImage,horizontalBar;
     private TextView mResultText,transparentBG;
     private Button mSaveImageButton;
+
+
+
 
     public static final String ACTION_BAR_TITLE = "action_bar_title";
 
@@ -90,21 +90,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case QRCodeUtility.PICK_IMAGE:
                     bitmap = QRCodeUtility.getBitmapFromGalleryActivityResult( this, data);
-                    temp_bitmap = bitmap;
                     FirebaseVisionBarcode barcode = QRCodeUtility.getQRCodeBarcodeFromBitmap(bitmap);
                     if( barcode != null) {
                         bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
                         mMainImage.setImageBitmap( bitmap);
+
                         mResultText.setText(QRCodeUtility.getQrCodeValue(barcode));
                         mResultText.setVisibility(View.VISIBLE);
                         mSaveImageButton.setVisibility( View.VISIBLE);
-                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,temp_bitmap);
+                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,mMainImage);
                     }else{
                         mMainImage.setImageBitmap( bitmap);
                         mResultText.setText( QRCodeUtility.NO_QRCODE);
                         mResultText.setVisibility(View.VISIBLE);
                         mSaveImageButton.setVisibility( View.INVISIBLE);
-                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,bitmap);
+                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,mMainImage);
                     }
                     break;
             }
