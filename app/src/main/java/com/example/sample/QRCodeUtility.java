@@ -214,14 +214,11 @@ public class QRCodeUtility{
     }
 
     public static void startBarScannerAnimation(final ImageView horizontalBar, final TextView transparentBG,
-                                                Bitmap bitmap){
+                                                final int height){
 
         // ANIMATION ENABLE
         horizontalBar.setVisibility(View.VISIBLE);
         transparentBG.setVisibility(View.VISIBLE);
-
-        //Bitmap image border
-        final int finalHeight = bitmap.getHeight();
 
         //Handler Class
         final Handler handler = new Handler();
@@ -237,7 +234,7 @@ public class QRCodeUtility{
                     public void run() {
                         if(flag == 0){
                             barScanY += 5;
-                            if(horizontalBar.getY()> finalHeight){
+                            if(horizontalBar.getY()> height){
                                 flag = 1;
                             }}
                         else{

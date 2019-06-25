@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,12 +24,17 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private Bitmap bitmap,temp_bitmap;
+    private Bitmap bitmap;
     private ImageView mMainImage,horizontalBar;
     private TextView mResultText,transparentBG;
     private Button mSaveImageButton;
 
+    ViewTreeObserver vto;
+
+
     public static final String ACTION_BAR_TITLE = "action_bar_title";
+
+    private static int finalHeight,finalWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,21 +96,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case QRCodeUtility.PICK_IMAGE:
                     bitmap = QRCodeUtility.getBitmapFromGalleryActivityResult( this, data);
-                    temp_bitmap = bitmap;
                     FirebaseVisionBarcode barcode = QRCodeUtility.getQRCodeBarcodeFromBitmap(bitmap);
                     if( barcode != null) {
                         bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
                         mMainImage.setImageBitmap( bitmap);
+                        vto = mMainImage.getViewTreeObserver();
+                        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                            public boolean onPreDraw() {
+                                mMainImage.getViewTreeObserver().removeOnPreDrawListener(this);
+                                finalHeight = mMainImage.getMeasuredHeight();
+                                return true;
+                            }
+                        });
                         mResultText.setText(QRCodeUtility.getQrCodeValue(barcode));
                         mResultText.setVisibility(View.VISIBLE);
                         mSaveImageButton.setVisibility( View.VISIBLE);
-                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,temp_bitmap);
+                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,finalHeight);
                     }else{
                         mMainImage.setImageBitmap( bitmap);
+                        vto = mMainImage.getViewTreeObserver();
+                        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                            public boolean onPreDraw() {
+                                mMainImage.getViewTreeObserver().removeOnPreDrawListener(this);
+                                finalHeight = mMainImage.getMeasuredHeight();
+                                return true;
+                            }
+                        });
                         mResultText.setText( QRCodeUtility.NO_QRCODE);
                         mResultText.setVisibility(View.VISIBLE);
                         mSaveImageButton.setVisibility( View.INVISIBLE);
-                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,bitmap);
+                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,finalHeight);
                     }
                     break;
             }
@@ -119,28 +140,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         QRCodeUtility.saveBitmapToGallery( MainActivity.this, this, "hellomoney", bitmap);
     }
 
-
-    public Drawable createLine( int width, int height){
-        Drawable line = new Drawable() {
-            @Override
-            public void draw(@NonNull Canvas canvas) {
-
-            }
-
-            @Override
-            public void setAlpha(int alpha) {
-
-            }
-
-            @Override
-            public void setColorFilter(@Nullable ColorFilter colorFilter) {
-
-            }
-
-            @Override
-            public int getOpacity() {
-                return 0;
-            }
-        }
-    }
+//
+//    public Drawable createLine( int width, int height){
+//        Drawable line = new Drawable() {
+//            @Override
+//            public void draw(@NonNull Canvas canvas) {
+//
+//            }
+//
+//            @Override
+//            public void setAlpha(int alpha) {
+//
+//            }
+//
+//            @Override
+//            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+//
+//            }
+//
+//            @Override
+//            public int getOpacity() {
+//                return 0;
+//            }
+//        }
+//    }
 }
