@@ -9,9 +9,7 @@ import android.content.Intent;
 import android.content.Context;
 
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -22,13 +20,9 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.provider.Settings;
-import android.util.Log;
-import android.view.Display;
+
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -162,7 +156,7 @@ public class QRCodeUtility{
         int x2 = corner[1].x > corner[2].x? corner[1].x : corner[2].x;
         int y2 = corner[2].y > corner[3].y? corner[2].y : corner[3].y;
 
-        return Bitmap.createBitmap( bitmap, x1, y1, x2-x1 + 2, y2-y1 + 2);
+        return Bitmap.createBitmap( bitmap, x1, y1, x2-x1, y2-y1);
     }
 
     public static String getQrCodeValue( @NonNull FirebaseVisionBarcode barcode){
@@ -237,8 +231,7 @@ public class QRCodeUtility{
         //Handler Class
         final Handler handler = new Handler();
         final Timer timer = new Timer();
-
-        timer.schedule(new TimerTask() {
+        final TimerTask task = new TimerTask(){
 
             @Override
             public void run() {
@@ -253,7 +246,7 @@ public class QRCodeUtility{
                             }}
                         else{
                             barScanY -= 5;
-                            if(horizontalBar.getY()<-100.0f){
+                            if(horizontalBar.getY() < -100.0f){
                                 flag = 0;
                                 timer.cancel();
                                 timer.purge();
@@ -266,6 +259,8 @@ public class QRCodeUtility{
                     }
                 });
             }
-        },500,10);
+        };
+
+        timer.schedule( task ,500,10);
     }
 }
