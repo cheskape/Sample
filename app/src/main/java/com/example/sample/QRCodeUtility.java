@@ -23,8 +23,10 @@ import android.provider.MediaStore;
 
 import android.view.Display;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -269,6 +271,16 @@ public class QRCodeUtility{
         int height = size.y;
 
         return height;
+    }
+
+    public static void viewsAfterScan(Bitmap bitmap, String barcodeValue, ImageView qrCodeImage, ImageView initImage,
+                                      TextView resultText, Button saveImageButton){
+        qrCodeImage.setImageBitmap( bitmap);
+        initImage.setVisibility(View.INVISIBLE);
+        qrCodeImage.setVisibility(View.VISIBLE);
+        resultText.setText( barcodeValue);
+        resultText.setVisibility(View.VISIBLE);
+        saveImageButton.setVisibility( View.VISIBLE);
     }
 
 }

@@ -16,14 +16,16 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 
+import pl.droidsonroids.gif.GifImageView;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Bitmap bitmap;
     private ImageView qrCodeImage,horizontalBar,initImage;
     private TextView resultText;
-    private Button saveImageButton;
-
     private View transparentBG;
+    private Button saveImageButton;
+    private GifImageView showOnSuccess;
 
 
     public static final String ACTION_BAR_TITLE = "action_bar_title";
@@ -46,7 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resultText = (TextView) findViewById( R.id.main_text_results);
         saveImageButton = (Button) findViewById( R.id.main_save_image_button);
         horizontalBar = (ImageView) findViewById(R.id.bar_scan);
-        transparentBG = (TextView) findViewById(R.id.transparent_background);
+        transparentBG = (View) findViewById(R.id.transparent_background);
+        showOnSuccess = (GifImageView) findViewById(R.id.gif_view_on_success);
     }
 
     @Override
@@ -111,12 +114,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onFinish() {
                             if( barcode != null) {
                                 bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
-                                qrCodeImage.setImageBitmap( bitmap);
-                                initImage.setVisibility(View.INVISIBLE);
-                                qrCodeImage.setVisibility(View.VISIBLE);
-                                resultText.setText(QRCodeUtility.getQrCodeValue(barcode));
-                                resultText.setVisibility(View.VISIBLE);
-                                saveImageButton.setVisibility( View.VISIBLE);
+                                QRCodeUtility.viewsAfterScan( bitmap, QRCodeUtility.getQrCodeValue(barcode), qrCodeImage,
+                                        initImage, resultText, saveImageButton);
+                                new CountDownTimer(2380, 1000) {
+
+                                    public void onTick(long millisUntilFinished) {
+                                        showOnSuccess.setVisibility(View.VISIBLE);
+                                        initImage.setVisibility(View.INVISIBLE);
+                                        qrCodeImage.setVisibility(View.INVISIBLE);
+                                        resultText.setVisibility(View.INVISIBLE);
+                                        saveImageButton.setVisibility( View.INVISIBLE);
+                                    }
+
+                                    public void onFinish() {
+                                        showOnSuccess.setVisibility(View.INVISIBLE);
+                                        initImage.setVisibility(View.INVISIBLE);
+                                        qrCodeImage.setVisibility(View.VISIBLE);
+                                        resultText.setVisibility(View.VISIBLE);
+                                        saveImageButton.setVisibility( View.VISIBLE);
+                                    }
+                                }.start();
 
                             }else{
                                 qrCodeImage.setImageBitmap( bitmap);
@@ -125,20 +142,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 resultText.setText( QRCodeUtility.NO_QRCODE);
                                 resultText.setVisibility(View.VISIBLE);
                                 saveImageButton.setVisibility( View.INVISIBLE);
+
                             }
-                        }
-                    }.start();
-
-                    new CountDownTimer(secondsToScan, 1000) {
-
-                        public void onTick(long millisUntilFinished) {
-
-                        }
-
-                        public void onFinish() {
 
                         }
                     }.start();
+
+
 
             }
 
