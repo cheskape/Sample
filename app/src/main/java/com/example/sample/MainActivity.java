@@ -118,29 +118,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void saveImage( View v){
         QRCodeUtility.saveBitmapToGallery( MainActivity.this, this, "hellomoney", bitmap);
     }
-
-
-    public Drawable createLine( int width, int height){
-        Drawable line = new Drawable() {
-            @Override
-            public void draw(@NonNull Canvas canvas) {
-
-            }
-
-            @Override
-            public void setAlpha(int alpha) {
-
-            }
-
-            @Override
-            public void setColorFilter(@Nullable ColorFilter colorFilter) {
-
-            }
-
-            @Override
-            public int getOpacity() {
-                return 0;
-            }
-        }
-    }
 }
