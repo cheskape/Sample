@@ -22,10 +22,11 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Bitmap bitmap;
     private ImageView mMainImage,mProxyImage;
-    private TextView mResultText;
+    private TextView mResultText,mTransparentBG;
     private Button mSaveImageButton;
 
     public static final String ACTION_BAR_TITLE = "action_bar_title";
+    public static int temp_flag = 0;
 
     public File imageFile;
 
@@ -42,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mMainImage = findViewById( R.id.main_image);
         mResultText = findViewById( R.id.main_text_results);
-        mProxyImage = findViewById(R.id.bar_scan);
         mSaveImageButton = findViewById( R.id.main_save_image_button);
     }
 
@@ -93,12 +93,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
                         mMainImage.setImageBitmap( bitmap);
                         mResultText.setText(QRCodeUtility.getQrCodeValue(barcode));
-                        mSaveImageButton.setVisibility( View.VISIBLE);
+                        mResultText.setVisibility(View.INVISIBLE);
+                        mSaveImageButton.setVisibility( View.INVISIBLE);
+                        mProxyImage = (ImageView) findViewById(R.id.bar_scan);
+                        mTransparentBG = (TextView) findViewById(R.id.transparent_background);
+                        temp_flag = 1;
+                        QRCodeUtility.startBarScannerAnimation(mProxyImage,mTransparentBG,
+                                mResultText,mSaveImageButton,temp_flag,bitmap);
                     }else{
                         mMainImage.setImageBitmap( bitmap);
                         mResultText.setText( QRCodeUtility.NO_QRCODE);
+                        mResultText.setVisibility(View.INVISIBLE);
                         mSaveImageButton.setVisibility( View.INVISIBLE);
-                        QRCodeUtility.startBarScannerAnimation(this,this,mProxyImage,bitmap);
+                        mProxyImage = (ImageView) findViewById(R.id.bar_scan);
+                        mTransparentBG = (TextView) findViewById(R.id.transparent_background);
+                        temp_flag = 0;
+                        QRCodeUtility.startBarScannerAnimation(mProxyImage,mTransparentBG,
+                                mResultText,mSaveImageButton,temp_flag,bitmap);
                     }
                     break;
             }
