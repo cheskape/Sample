@@ -114,16 +114,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onFinish() {
                             if( barcode != null) {
                                 bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
-                                QRCodeUtility.viewsAfterScan( bitmap, QRCodeUtility.getQrCodeValue(barcode), qrCodeImage,
-                                        initImage, resultText, saveImageButton);
+                                QRCodeUtility.viewsAfterSuccessfulScan( bitmap, QRCodeUtility.getQrCodeValue(barcode), qrCodeImage,
+                                                                        initImage, resultText, saveImageButton);
 
                             }else{
-                                qrCodeImage.setImageBitmap( bitmap);
-                                initImage.setVisibility(View.INVISIBLE);
-                                qrCodeImage.setVisibility(View.VISIBLE);
-                                resultText.setText( QRCodeUtility.NO_QRCODE);
-                                resultText.setVisibility(View.VISIBLE);
-                                saveImageButton.setVisibility( View.INVISIBLE);
+                                QRCodeUtility.viewsAfterNoBarcodeScan( bitmap, QRCodeUtility.NO_QRCODE, qrCodeImage,
+                                                                        initImage, resultText, saveImageButton);
                             }
                         }
                     }.start();

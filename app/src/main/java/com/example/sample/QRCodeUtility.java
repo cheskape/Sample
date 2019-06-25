@@ -270,14 +270,24 @@ public class QRCodeUtility{
         return height;
     }
 
-    public static void viewsAfterScan(Bitmap bitmap, String barcodeValue, ImageView qrCodeImage, ImageView initImage,
-                                        TextView resultText, Button saveImageButton){
+    public static void viewsAfterSuccessfulScan(Bitmap bitmap, String barcodeValue, ImageView qrCodeImage,
+                                                ImageView initImage, TextView resultText, Button saveImageButton){
         qrCodeImage.setImageBitmap( bitmap);
         initImage.setVisibility(View.INVISIBLE);
         qrCodeImage.setVisibility(View.VISIBLE);
         resultText.setText( barcodeValue);
         resultText.setVisibility(View.VISIBLE);
         saveImageButton.setVisibility( View.VISIBLE);
+    }
+
+    public static void viewsAfterNoBarcodeScan( Bitmap bitmap, String message, ImageView qrCodeImage,
+                                                ImageView initImage, TextView resultText, Button saveImageButton){
+        qrCodeImage.setImageBitmap( bitmap);
+        initImage.setVisibility(View.INVISIBLE);
+        qrCodeImage.setVisibility(View.VISIBLE);
+        resultText.setText( QRCodeUtility.NO_QRCODE);
+        resultText.setVisibility(View.VISIBLE);
+        saveImageButton.setVisibility( View.INVISIBLE);
     }
 
 }
