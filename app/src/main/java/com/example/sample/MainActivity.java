@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     qrCodeImage.setVisibility(View.INVISIBLE);
 
                     Display display = getWindowManager().getDefaultDisplay();
-                    secondsToScan = (QRCodeUtility.getSecondsImageHeight(initImage,display))*5;
+                    secondsToScan = (QRCodeUtility.getSecondsFromImageHeight(initImage,display))*5;
 
                     QRCodeUtility.startBarScannerAnimation( horizontalBar, transparentBG, initImage, display);
                     final FirebaseVisionBarcode barcode = QRCodeUtility.getQRCodeBarcodeFromBitmap(bitmap);

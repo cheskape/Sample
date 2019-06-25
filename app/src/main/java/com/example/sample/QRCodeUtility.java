@@ -262,7 +262,7 @@ public class QRCodeUtility{
         timer.schedule( task ,500,10);
     }
 
-    public static int getSecondsImageHeight(final ImageView imageToScan, final Display display){
+    public static int getSecondsFromImageHeight(final ImageView imageToScan, final Display display){
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
