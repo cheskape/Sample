@@ -24,7 +24,8 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Bitmap bitmap;
     private ImageView qrCodeImage,horizontalBar,initImage;
-    private TextView resultText, transparentBG;
+    private TextView resultText;
+    private View transparentBG;
     private Button saveImageButton;
 
 
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resultText = (TextView) findViewById( R.id.main_text_results);
         saveImageButton = (Button) findViewById( R.id.main_save_image_button);
         horizontalBar = (ImageView) findViewById(R.id.bar_scan);
-        transparentBG = (TextView) findViewById(R.id.transparent_background);
+        transparentBG = (View) findViewById(R.id.transparent_background);
     }
 
     @Override
@@ -113,12 +114,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onFinish() {
                             if( barcode != null) {
                                 bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
-                                qrCodeImage.setImageBitmap( bitmap);
-                                initImage.setVisibility(View.INVISIBLE);
-                                qrCodeImage.setVisibility(View.VISIBLE);
-                                resultText.setText(QRCodeUtility.getQrCodeValue(barcode));
-                                resultText.setVisibility(View.VISIBLE);
-                                saveImageButton.setVisibility( View.VISIBLE);
+                                QRCodeUtility.viewsAfterScan( bitmap, QRCodeUtility.getQrCodeValue(barcode), qrCodeImage,
+                                        initImage, resultText, saveImageButton);
 
                             }else{
                                 qrCodeImage.setImageBitmap( bitmap);

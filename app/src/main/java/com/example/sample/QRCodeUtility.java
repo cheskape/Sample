@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -212,7 +213,7 @@ public class QRCodeUtility{
         return grayscaleBitmap;
     }
 
-    public static void startBarScannerAnimation(final ImageView horizontalBar, final TextView transparentBG,
+    public static void startBarScannerAnimation(final ImageView horizontalBar, final View transparentBG,
                                                 final ImageView imageToScan, final Display display){
 
         Point size = new Point();
@@ -267,6 +268,16 @@ public class QRCodeUtility{
         int height = size.y;
 
         return height;
+    }
+
+    public static void viewsAfterScan(Bitmap bitmap, String barcodeValue, ImageView qrCodeImage, ImageView initImage,
+                                        TextView resultText, Button saveImageButton){
+        qrCodeImage.setImageBitmap( bitmap);
+        initImage.setVisibility(View.INVISIBLE);
+        qrCodeImage.setVisibility(View.VISIBLE);
+        resultText.setText( barcodeValue);
+        resultText.setVisibility(View.VISIBLE);
+        saveImageButton.setVisibility( View.VISIBLE);
     }
 
 }
