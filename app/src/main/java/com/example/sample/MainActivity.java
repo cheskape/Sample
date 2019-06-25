@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Bitmap bitmap,temp_bitmap;
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,temp_bitmap);
                     }else{
                         mMainImage.setImageBitmap( bitmap);
-                        mResultText.setText( QRCodeUtility.NO_QRCOE);
+                        mResultText.setText( QRCodeUtility.NO_QRCODE);
                         mResultText.setVisibility(View.VISIBLE);
                         mSaveImageButton.setVisibility( View.INVISIBLE);
                         QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,bitmap);
