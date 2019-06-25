@@ -9,9 +9,7 @@ import android.content.Intent;
 import android.content.Context;
 
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -22,13 +20,11 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.provider.Settings;
+
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,9 +47,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.CountDownLatch;
-
-import pl.droidsonroids.gif.GifImageView;
 
 public class QRCodeUtility{
 
@@ -70,11 +63,8 @@ public class QRCodeUtility{
 
     private static float barScanY;
     private static int flag = 0;
-    private static int height;
 
-
-
-    private static ViewTreeObserver vto;
+    private  static int height = 0;
 
     public static void warnNeedPermission( final Activity activity, final int requestCode, String message){
         AlertDialog.Builder alert = new AlertDialog.Builder( activity);
@@ -134,10 +124,10 @@ public class QRCodeUtility{
     public static FirebaseVisionBarcode getQRCodeBarcodeFromBitmap( @NonNull Bitmap bitmap){
         FirebaseVisionBarcodeDetectorOptions options =
                 new FirebaseVisionBarcodeDetectorOptions.Builder()
-                    .setBarcodeFormats(
-                            FirebaseVisionBarcode.FORMAT_QR_CODE,
-                            FirebaseVisionBarcode.FORMAT_AZTEC)
-                    .build();
+                        .setBarcodeFormats(
+                                FirebaseVisionBarcode.FORMAT_QR_CODE,
+                                FirebaseVisionBarcode.FORMAT_AZTEC)
+                        .build();
 
 //        bitmap = toGrayscale( bitmap);
 
@@ -145,7 +135,7 @@ public class QRCodeUtility{
 
         FirebaseVisionBarcodeDetector detector =
                 FirebaseVision.getInstance()
-                    .getVisionBarcodeDetector( options);
+                        .getVisionBarcodeDetector( options);
 
         Task<List<FirebaseVisionBarcode>> task = detector.detectInImage( image);
 
@@ -166,7 +156,7 @@ public class QRCodeUtility{
         int x2 = corner[1].x > corner[2].x? corner[1].x : corner[2].x;
         int y2 = corner[2].y > corner[3].y? corner[2].y : corner[3].y;
 
-        return Bitmap.createBitmap( bitmap, x1, y1, x2-x1 + 2, y2-y1 + 2);
+        return Bitmap.createBitmap( bitmap, x1, y1, x2-x1, y2-y1);
     }
 
     public static String getQrCodeValue( @NonNull FirebaseVisionBarcode barcode){
@@ -223,25 +213,22 @@ public class QRCodeUtility{
     }
 
     public static void startBarScannerAnimation(final ImageView horizontalBar, final TextView transparentBG,
-                                                final ImageView imageToScan, final Handler handler,
-                                                final Timer timer, final GifImageView onSuccessShow){
+                                                final ImageView imageToScan, final Display display){
 
-        vto = imageToScan.getViewTreeObserver();
-        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            public boolean onPreDraw() {
-                imageToScan.getViewTreeObserver().removeOnPreDrawListener(this);
-                height = imageToScan.getMeasuredHeight();
-                return true;
-            }
-        });
+        Point size = new Point();
+        display.getSize(size);
+        height = size.y;
+
+
 
         // ANIMATION ENABLE
         horizontalBar.setVisibility(View.VISIBLE);
         transparentBG.setVisibility(View.VISIBLE);
 
         //Handler Class
-
-        timer.scheduleAtFixedRate(new TimerTask() {
+        final Handler handler = new Handler();
+        final Timer timer = new Timer();
+        final TimerTask task = new TimerTask(){
 
             @Override
             public void run() {
@@ -256,13 +243,12 @@ public class QRCodeUtility{
                             }}
                         else{
                             barScanY -= 5;
-                            if(horizontalBar.getY()<-100.0f){
+                            if(horizontalBar.getY() < -100.0f){
                                 flag = 0;
-                                horizontalBar.setVisibility(View.GONE);
-                                transparentBG.setVisibility(View.GONE);
-                                onSuccessShow.setVisibility(View.VISIBLE);
                                 timer.cancel();
                                 timer.purge();
+                                horizontalBar.setVisibility(View.GONE);
+                                transparentBG.setVisibility(View.GONE);
                             }}
 
                         horizontalBar.setY(barScanY);
@@ -270,15 +256,17 @@ public class QRCodeUtility{
                     }
                 });
             }
-        },500,10);
+        };
 
+        timer.schedule( task ,500,10);
     }
 
-    public static void bufferTextviewAndButton(final TextView resultText, final Button saveImage, int flag){
-        resultText.setVisibility(View.VISIBLE);
-        if(flag == 1){
-            saveImage.setVisibility(View.VISIBLE); }
-        else{saveImage.setVisibility(View.INVISIBLE);}
+    public static int getSecondsImageHeight(final ImageView imageToScan, final Display display){
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+
+        return height;
     }
 
 }
