@@ -26,6 +26,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -66,6 +67,10 @@ public class QRCodeUtility{
 
     private static float barScanY;
     private static int flag = 0;
+
+    private static int height;
+
+    private static ViewTreeObserver vto;
 
     public static void warnNeedPermission( final Activity activity, final int requestCode, String message){
         AlertDialog.Builder alert = new AlertDialog.Builder( activity);
@@ -214,7 +219,16 @@ public class QRCodeUtility{
     }
 
     public static void startBarScannerAnimation(final ImageView horizontalBar, final TextView transparentBG,
-                                                final int height){
+                                                final ImageView imageToScan){
+
+        vto = imageToScan.getViewTreeObserver();
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                imageToScan.getViewTreeObserver().removeOnPreDrawListener(this);
+                height = imageToScan.getMeasuredHeight();
+                return true;
+            }
+        });
 
         // ANIMATION ENABLE
         horizontalBar.setVisibility(View.VISIBLE);

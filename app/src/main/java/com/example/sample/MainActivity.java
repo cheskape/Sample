@@ -3,9 +3,6 @@ package com.example.sample;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,12 +25,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mResultText,transparentBG;
     private Button mSaveImageButton;
 
-    ViewTreeObserver vto;
+
 
 
     public static final String ACTION_BAR_TITLE = "action_bar_title";
-
-    private static int finalHeight,finalWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,32 +94,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if( barcode != null) {
                         bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
                         mMainImage.setImageBitmap( bitmap);
-                        vto = mMainImage.getViewTreeObserver();
-                        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                            public boolean onPreDraw() {
-                                mMainImage.getViewTreeObserver().removeOnPreDrawListener(this);
-                                finalHeight = mMainImage.getMeasuredHeight();
-                                return true;
-                            }
-                        });
+
                         mResultText.setText(QRCodeUtility.getQrCodeValue(barcode));
                         mResultText.setVisibility(View.VISIBLE);
                         mSaveImageButton.setVisibility( View.VISIBLE);
-                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,finalHeight);
+                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,mMainImage);
                     }else{
                         mMainImage.setImageBitmap( bitmap);
-                        vto = mMainImage.getViewTreeObserver();
-                        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                            public boolean onPreDraw() {
-                                mMainImage.getViewTreeObserver().removeOnPreDrawListener(this);
-                                finalHeight = mMainImage.getMeasuredHeight();
-                                return true;
-                            }
-                        });
                         mResultText.setText( QRCodeUtility.NO_QRCODE);
                         mResultText.setVisibility(View.VISIBLE);
                         mSaveImageButton.setVisibility( View.INVISIBLE);
-                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,finalHeight);
+                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,mMainImage);
                     }
                     break;
             }
