@@ -20,15 +20,12 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private Bitmap bitmap;
-    private ImageView mMainImage,mProxyImage;
-    private TextView mResultText,mTransparentBG;
+    private Bitmap bitmap,temp_bitmap;
+    private ImageView mMainImage,horizontalBar;
+    private TextView mResultText,transparentBG;
     private Button mSaveImageButton;
 
     public static final String ACTION_BAR_TITLE = "action_bar_title";
-    public static int temp_flag = 0;
-
-    public File imageFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMainImage = findViewById( R.id.main_image);
         mResultText = findViewById( R.id.main_text_results);
         mSaveImageButton = findViewById( R.id.main_save_image_button);
+        horizontalBar = (ImageView) findViewById(R.id.bar_scan);
+        transparentBG = (TextView) findViewById(R.id.transparent_background);
     }
 
     @Override
@@ -88,28 +87,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case QRCodeUtility.PICK_IMAGE:
                     bitmap = QRCodeUtility.getBitmapFromGalleryActivityResult( this, data);
-                    FirebaseVisionBarcode barcode = QRCodeUtility.getQRCodeBarcodeFromBitmap( bitmap);
+                    temp_bitmap = bitmap;
+                    FirebaseVisionBarcode barcode = QRCodeUtility.getQRCodeBarcodeFromBitmap(bitmap);
                     if( barcode != null) {
                         bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
                         mMainImage.setImageBitmap( bitmap);
                         mResultText.setText(QRCodeUtility.getQrCodeValue(barcode));
-                        mResultText.setVisibility(View.INVISIBLE);
-                        mSaveImageButton.setVisibility( View.INVISIBLE);
-                        mProxyImage = (ImageView) findViewById(R.id.bar_scan);
-                        mTransparentBG = (TextView) findViewById(R.id.transparent_background);
-                        temp_flag = 1;
-                        QRCodeUtility.startBarScannerAnimation(mProxyImage,mTransparentBG,
-                                mResultText,mSaveImageButton,temp_flag,bitmap);
+                        mResultText.setVisibility(View.VISIBLE);
+                        mSaveImageButton.setVisibility( View.VISIBLE);
+                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,temp_bitmap);
                     }else{
                         mMainImage.setImageBitmap( bitmap);
-                        mResultText.setText( QRCodeUtility.NO_QRCODE);
-                        mResultText.setVisibility(View.INVISIBLE);
+                        mResultText.setText( QRCodeUtility.NO_QRCOE);
+                        mResultText.setVisibility(View.VISIBLE);
                         mSaveImageButton.setVisibility( View.INVISIBLE);
-                        mProxyImage = (ImageView) findViewById(R.id.bar_scan);
-                        mTransparentBG = (TextView) findViewById(R.id.transparent_background);
-                        temp_flag = 0;
-                        QRCodeUtility.startBarScannerAnimation(mProxyImage,mTransparentBG,
-                                mResultText,mSaveImageButton,temp_flag,bitmap);
+                        QRCodeUtility.startBarScannerAnimation(horizontalBar,transparentBG,bitmap);
                     }
                     break;
             }

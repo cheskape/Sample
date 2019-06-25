@@ -228,14 +228,12 @@ public class QRCodeUtility{
         return grayscaleBitmap;
     }
 
-    public static void startBarScannerAnimation(final ImageView mProxyImage, final TextView mTransparentBG,
-                                                final TextView mResultText, final Button mSaveImageButton,
-                                                final int temp_flag,Bitmap bitmap){
-        mProxyImage.setVisibility(View.VISIBLE);
-        mTransparentBG.setVisibility(View.VISIBLE);
+    public static void startBarScannerAnimation(final ImageView horizontalBar, final TextView transparentBG,
+                                                Bitmap bitmap){
 
-        //Scanner
-        final int screenWidth,screenHeight;
+        // ANIMATION ENABLE
+        horizontalBar.setVisibility(View.VISIBLE);
+        transparentBG.setVisibility(View.VISIBLE);
 
         //Bitmap image border
         final int finalHeight = bitmap.getHeight();
@@ -254,23 +252,20 @@ public class QRCodeUtility{
                     public void run() {
                         if(flag == 0){
                             barScanY += 5;
-                            if(mProxyImage.getY()> finalHeight){
+                            if(horizontalBar.getY()> finalHeight){
                                 flag = 1;
                             }}
                         else{
                             barScanY -= 5;
-                            if(mProxyImage.getY()<-100.0f){
+                            if(horizontalBar.getY()<-100.0f){
                                 flag = 0;
                                 timer.cancel();
                                 timer.purge();
-                                mProxyImage.setVisibility(View.GONE);
-                                mTransparentBG.setVisibility(View.GONE);
-                                mResultText.setVisibility(View.VISIBLE);
-                                if(temp_flag == 1){
-                                    mSaveImageButton.setVisibility( View.VISIBLE);}
+                                horizontalBar.setVisibility(View.GONE);
+                                transparentBG.setVisibility(View.GONE);
                             }}
 
-                        mProxyImage.setY(barScanY);
+                        horizontalBar.setY(barScanY);
 
                     }
                 });

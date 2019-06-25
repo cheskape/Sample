@@ -28,8 +28,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+
+    // FIREBASE
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-ml-vision:21.0.0'
+
+    // DROIDSONROIDS GIF MAKER
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'
