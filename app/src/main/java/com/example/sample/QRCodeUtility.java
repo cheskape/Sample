@@ -27,7 +27,9 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -62,8 +64,8 @@ public class QRCodeUtility{
     private final static String SAVED_TO_NOTICE = "Image saved to: ";
     private final static String FILENAME_PREFIX = "hellomoney_qr_code_";
 
-    private static int barScanY = 0;
-
+    private static float barScanY;
+    private static int flag = 0;
 
     public static void warnNeedPermission( final Activity activity, final int requestCode, String message){
         AlertDialog.Builder alert = new AlertDialog.Builder( activity);
@@ -105,7 +107,6 @@ public class QRCodeUtility{
         Intent intent = new Intent( Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         activity.startActivityForResult( intent, PICK_IMAGE);
     }
-
 
 
     public static Bitmap getBitmapFromGalleryActivityResult( Context context, Intent data){
@@ -212,5 +213,53 @@ public class QRCodeUtility{
         return grayscaleBitmap;
     }
 
+    public static void startBarScannerAnimation(final ImageView mProxyImage, final TextView mTransparentBG,
+                                                final TextView mResultText, final Button mSaveImageButton,
+                                                final int temp_flag,Bitmap bitmap){
+        mProxyImage.setVisibility(View.VISIBLE);
+        mTransparentBG.setVisibility(View.VISIBLE);
 
+        //Scanner
+        final int screenWidth,screenHeight;
+
+        //Bitmap image border
+        final int finalHeight = bitmap.getHeight();
+
+        //Handler Class
+        final Handler handler = new Handler();
+        final Timer timer = new Timer();
+
+        timer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if(flag == 0){
+                            barScanY += 5;
+                            if(mProxyImage.getY()> finalHeight){
+                                flag = 1;
+                            }}
+                        else{
+                            barScanY -= 5;
+                            if(mProxyImage.getY()<-100.0f){
+                                flag = 0;
+                                timer.cancel();
+                                timer.purge();
+                                mProxyImage.setVisibility(View.GONE);
+                                mTransparentBG.setVisibility(View.GONE);
+                                mResultText.setVisibility(View.VISIBLE);
+                                if(temp_flag == 1){
+                                    mSaveImageButton.setVisibility( View.VISIBLE);}
+                            }}
+
+                        mProxyImage.setY(barScanY);
+
+                    }
+                });
+            }
+        },500,10);
+    }
 }
