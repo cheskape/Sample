@@ -1,11 +1,9 @@
 package com.example.sample;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,19 +11,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Bitmap bitmap;
     private ImageView qrCodeImage,horizontalBar,initImage;
-    private TextView resultText, transparentBG;
+    private TextView resultText;
     private Button saveImageButton;
+
+    private View transparentBG;
 
 
     public static final String ACTION_BAR_TITLE = "action_bar_title";
@@ -130,7 +128,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         }
                     }.start();
+
+                    new CountDownTimer(secondsToScan, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        public void onFinish() {
+
+                        }
+                    }.start();
+
             }
+
         }
     }
 

@@ -21,12 +21,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -61,10 +59,14 @@ public class QRCodeUtility{
     private final static String SAVED_TO_NOTICE = "Image saved to: ";
     private final static String FILENAME_PREFIX = "hellomoney_qr_code_";
 
+
+    // HORIZONTAL BAR ANIMATION
     private static float barScanY;
     private static int flag = 0;
 
+    // GET HEIGHT OF SCREEN
     private  static int height = 0;
+
 
     public static void warnNeedPermission( final Activity activity, final int requestCode, String message){
         AlertDialog.Builder alert = new AlertDialog.Builder( activity);
@@ -212,7 +214,7 @@ public class QRCodeUtility{
         return grayscaleBitmap;
     }
 
-    public static void startBarScannerAnimation(final ImageView horizontalBar, final TextView transparentBG,
+    public static void startBarScannerAnimation(final ImageView horizontalBar, final View transparentBG,
                                                 final ImageView imageToScan, final Display display){
 
         Point size = new Point();
