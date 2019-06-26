@@ -17,6 +17,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -41,6 +42,8 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,6 +51,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import pl.droidsonroids.gif.GifImageView;
 
 public class QRCodeUtility{
 
@@ -288,6 +293,57 @@ public class QRCodeUtility{
         resultText.setText( QRCodeUtility.NO_QRCODE);
         resultText.setVisibility(View.VISIBLE);
         saveImageButton.setVisibility( View.INVISIBLE);
+    }
+
+
+    public static void viewsOnSuccessAnimation(final GifImageView showOnSuccess, final ImageView initImage,
+                                               final ImageView qrCodeImage, final TextView resultText,
+                                               final Button saveImageButton,final View transparentBG){
+        new CountDownTimer(2380, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                showOnSuccess.setVisibility(View.VISIBLE);
+                initImage.setVisibility(View.VISIBLE);
+                qrCodeImage.setVisibility(View.INVISIBLE);
+                resultText.setVisibility(View.INVISIBLE);
+                saveImageButton.setVisibility( View.INVISIBLE);
+                transparentBG.setVisibility(View.VISIBLE);
+            }
+
+            public void onFinish() {
+                showOnSuccess.setVisibility(View.INVISIBLE);
+                initImage.setVisibility(View.INVISIBLE);
+                qrCodeImage.setVisibility(View.VISIBLE);
+                resultText.setVisibility(View.VISIBLE);
+                saveImageButton.setVisibility( View.VISIBLE);
+                transparentBG.setVisibility(View.INVISIBLE);
+            }
+        }.start();
+    }
+
+    public static void viewsOnFailureAnimation(final GifImageView showOnFailure, final ImageView initImage,
+                                               final ImageView qrCodeImage, final TextView resultText,
+                                               final Button saveImageButton,final View transparentBG) {
+        new CountDownTimer(2380, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                showOnFailure.setVisibility(View.VISIBLE);
+                initImage.setVisibility(View.INVISIBLE);
+                qrCodeImage.setVisibility(View.INVISIBLE);
+                resultText.setVisibility(View.INVISIBLE);
+                saveImageButton.setVisibility( View.INVISIBLE);
+                transparentBG.setVisibility(View.VISIBLE);
+            }
+
+            public void onFinish() {
+                showOnFailure.setVisibility(View.INVISIBLE);
+                initImage.setVisibility(View.INVISIBLE);
+                qrCodeImage.setVisibility(View.VISIBLE);
+                resultText.setVisibility(View.VISIBLE);
+                saveImageButton.setVisibility( View.INVISIBLE);
+                transparentBG.setVisibility(View.INVISIBLE);
+            }
+        }.start();
     }
 
 }

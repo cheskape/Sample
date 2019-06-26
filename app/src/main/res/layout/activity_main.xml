@@ -32,38 +32,6 @@
                     android:src="@drawable/default_image"
                     />
 
-                <pl.droidsonroids.gif.GifImageView
-                    android:id="@+id/gif_view_on_success"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:background="@color/transparentBG"
-                    android:visibility="invisible"
-                    android:src="@drawable/success_scan_gif"/>
-
-                <pl.droidsonroids.gif.GifImageView
-                    android:id="@+id/gif_view_on_failure"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:background="@color/transparentBG"
-                    android:visibility="invisible"
-                    android:src="@drawable/failure_scan_gif"/>
-
-
-                <ImageView
-                    android:id="@+id/bar_scan"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/bar_scan"
-                    android:visibility="invisible"
-                    />
-
 
                 <TextView
                     android:id="@+id/main_text_results"
@@ -87,16 +55,43 @@
                     android:layout_centerHorizontal="true"
                     android:visibility="invisible"/>
 
-    <View
-        android:id="@+id/transparent_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/transparentBG"
-        android:visibility="invisible" />
+                    <View
+                        android:id="@+id/transparent_background"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/transparentBG"
+                        android:visibility="invisible" />
 
 
+                    <ImageView
+                        android:id="@+id/bar_scan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/bar_scan"
+                        android:visibility="invisible"
+                        />
+
+                    <pl.droidsonroids.gif.GifImageView
+                        android:id="@+id/gif_view_on_failure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="invisible"
+                        android:src="@drawable/failure_scan_gif"/>
 
 
+                    <pl.droidsonroids.gif.GifImageView
+                        android:id="@+id/gif_view_on_success"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="invisible"
+                        android:src="@drawable/success_scan_gif"/>
 
 
 

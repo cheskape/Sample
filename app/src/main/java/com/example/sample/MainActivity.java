@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -118,48 +119,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onFinish() {
                             if( barcode != null) {
                                 bitmap = QRCodeUtility.getQRCodeImageFromBitmap(barcode, bitmap);
+                                QRCodeUtility.viewsOnSuccessAnimation(showOnSuccess,initImage,qrCodeImage,resultText,
+                                        saveImageButton,transparentBG);
+                                Toast.makeText(getApplicationContext(),"Success!",Toast.LENGTH_SHORT).show();
                                 QRCodeUtility.viewsAfterSuccessfulScan( bitmap, QRCodeUtility.getQrCodeValue(barcode), qrCodeImage,
                                         initImage, resultText, saveImageButton);
-                                new CountDownTimer(2380, 1000) {
-
-                                    public void onTick(long millisUntilFinished) {
-                                        showOnSuccess.setVisibility(View.VISIBLE);
-                                        initImage.setVisibility(View.INVISIBLE);
-                                        qrCodeImage.setVisibility(View.INVISIBLE);
-                                        resultText.setVisibility(View.INVISIBLE);
-                                        saveImageButton.setVisibility( View.INVISIBLE);
-                                    }
-
-                                    public void onFinish() {
-                                        showOnSuccess.setVisibility(View.INVISIBLE);
-                                        initImage.setVisibility(View.INVISIBLE);
-                                        qrCodeImage.setVisibility(View.VISIBLE);
-                                        resultText.setVisibility(View.VISIBLE);
-                                        saveImageButton.setVisibility( View.VISIBLE);
-                                    }
-                                }.start();
 
                             }else{
+                                QRCodeUtility.viewsOnFailureAnimation(showOnFailure,initImage,qrCodeImage,resultText,
+                                        saveImageButton,transparentBG);
+                                Toast.makeText(getApplicationContext(),"Failed!",Toast.LENGTH_SHORT).show();
                                 QRCodeUtility.viewsAfterNoBarcodeScan( bitmap, QRCodeUtility.NO_QRCODE, qrCodeImage,
                                         initImage, resultText, saveImageButton);
-                                new CountDownTimer(2380, 1000) {
-
-                                    public void onTick(long millisUntilFinished) {
-                                        showOnFailure.setVisibility(View.VISIBLE);
-                                        initImage.setVisibility(View.INVISIBLE);
-                                        qrCodeImage.setVisibility(View.INVISIBLE);
-                                        resultText.setVisibility(View.INVISIBLE);
-                                        saveImageButton.setVisibility( View.INVISIBLE);
-                                    }
-
-                                    public void onFinish() {
-                                        showOnFailure.setVisibility(View.INVISIBLE);
-                                        initImage.setVisibility(View.INVISIBLE);
-                                        qrCodeImage.setVisibility(View.VISIBLE);
-                                        resultText.setVisibility(View.VISIBLE);
-                                        saveImageButton.setVisibility( View.INVISIBLE);
-                                    }
-                                }.start();
                             }
                         }
                     }.start();
